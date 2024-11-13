@@ -67,10 +67,10 @@ def styled_course_component(course) -> rx.Component:
         ),
         
         # Button for statistics
-        rx.button("Statistics", width="15%", padding="5px 15px", margin="0 15px"),
+        rx.button("Statistics", width="15%", padding="5px 15px", margin="0 15px", on_click=State.set_course(course["name"])),
         
         # Button to go to course
-        rx.button("Go to course", width="15%", padding="5px 15px", margin="0 15px", on_click=State.set_course(course["name"])),
+        rx.button("Go to course", width="15%", padding="5px 15px", margin="0 15px"),
         
         spacing="0",  # Disable default spacing between items
         align_items="center",  # Align items vertically in the center
