@@ -2,20 +2,42 @@ import reflex as rx
 from rxconfig import config
 from typing import List, Dict
 from reflex_calendar import calendar
+import plotly.express as px
+
+selected_course_data = None
 
 class State(rx.State):
     """The app state."""
     courses: List[Dict[str, int]] = [
-        {"name": "Introduction to Reflex", "progress": 30},
-        {"name": "Advanced Reflex Techniques", "progress": 60},
-        {"name": "Reflex UI Design", "progress": 85},
+        {"name": "Introduction to Reflex", "progress": 30, "times_per_section" : [30, 45, 25], "avg_times_per_section" : [10, 15, 15], "assignment_scores" : [85, 90, 70]},
+        {"name": "Advanced Reflex Techniques", "progress": 60,"times_per_section" : [20, 65, 15], "avg_times_per_section" : [10, 15, 15], "assignment_scores" : [55, 80, 55]},
+        {"name": "Reflex UI Design", "progress": 85, "times_per_section" : [10, 10, 15], "avg_times_per_section" : [10, 15, 15],"assignment_scores" : [50, 60, 70]},
     ]
 
-    selected_section: str = "home"
+    selected_section: Dict[str, int] = {}
+
+    avg_time_per_section: List[int] = [40, 30, 25]
 
     @rx.event
     def set_section(self, str):
         self.selected_section = str
+
+    selected_course: Dict[str, int] = None
+
+    @rx.event
+    def set_course(self, course_name: str):
+        """Set the selected course and redirect."""
+        course = next(
+            (course for course in self.courses if course["name"] == course_name),
+            None
+        )
+
+        if course:
+            self.selected_course = course
+            return rx.redirect(f"/course/{course_name}")
+        
+    def get_course(self) -> str:
+        return self._selected_course
 
 def styled_course_component(course) -> rx.Component:
     """Styled course component with a course name, progress bar, and inactive buttons."""
@@ -39,7 +61,7 @@ def styled_course_component(course) -> rx.Component:
         rx.button("Statistics", width="15%", padding="5px 15px", margin="0 15px"),
         
         # Button to go to course
-        rx.button("Go to course", width="15%", padding="5px 15px", margin="0 15px"),
+        rx.button("Go to course", width="15%", padding="5px 15px", margin="0 15px", on_click=State.set_course(course["name"])),
         
         spacing="0",  # Disable default spacing between items
         align_items="center",  # Align items vertically in the center
@@ -135,5 +157,47 @@ def index() -> rx.Component:
     )
 
 
+def course_details() -> rx.Component:
+    name = rx.heading(rx.State.name)
+
+
+    print(selected_course_data)
+
+    return rx.recharts.bar_chart(
+        rx.recharts.bar(
+            data_key="progress",
+        ),
+        rx.recharts.bar(
+            data_key="avg_times_per_section",
+        ),
+        rx.recharts.x_axis(),
+        rx.recharts.y_axis(),
+        data=State.courses,
+        width="50%",
+        height= 600,
+    )
+
+
+    # time_fig = px.bar(
+    #         x=list(range(1, len(State.selected_course["times_per_section"]) + 1)),
+    #         y=State.selected_course["times_per_section"],
+    #         title="Time per Course Section",
+    #         labels={"x": "Section", "y": "Time (minutes)"},
+    #     )
+    # time_fig.add_hline(y=course_time_avg, line_color="red", line_dash="dash", annotation_text="Avg Time")
+
+
+    # return rx.cond(
+    #     State.selected_course,
+    #     lambda: rx.vstack(
+    #         rx.plotly(time_fig, height="300px")
+    #     ),
+    #         rx.heading("Course not found", font_size="24px", padding="20px")
+    #     )
+
+    return name
+
+
 app = rx.App()
 app.add_page(index)
+app.add_page(course_details, route="/course/[name]")
