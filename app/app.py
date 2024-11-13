@@ -9,35 +9,44 @@ selected_course_data = None
 class State(rx.State):
     """The app state."""
     courses: List[Dict[str, int]] = [
-        {"name": "Introduction to Reflex", "progress": 30, "times_per_section" : [30, 45, 25], "avg_times_per_section" : [10, 15, 15], "assignment_scores" : [85, 90, 70]},
-        {"name": "Advanced Reflex Techniques", "progress": 60,"times_per_section" : [20, 65, 15], "avg_times_per_section" : [10, 15, 15], "assignment_scores" : [55, 80, 55]},
-        {"name": "Reflex UI Design", "progress": 85, "times_per_section" : [10, 10, 15], "avg_times_per_section" : [10, 15, 15],"assignment_scores" : [50, 60, 70]},
+        {"name": "Introduction to Reflex", "progress": 30, "avg_progress": 60, "times_per_section" : [30, 45, 25], "avg_times_per_section" : [10, 15, 15], "assignment_scores" : [85, 90, 70], "avg_assignment_scores" : [70, 83, 75]},
+        {"name": "Advanced Reflex Techniques", "progress": 60, "avg_progress": 60,"times_per_section" : [20, 65, 15], "avg_times_per_section" : [10, 15, 15], "assignment_scores" : [55, 80, 55], "avg_assignment_scores" : [60, 68, 65]},
+        {"name": "Reflex UI Design", "progress": 85, "avg_progress": 60,"times_per_section" : [10, 10, 15], "avg_times_per_section" : [10, 15, 15],"assignment_scores" : [50, 60, 70], "avg_assignment_scores" : [65, 64, 70]},
     ]
 
     selected_section: Dict[str, int] = {}
-
-    avg_time_per_section: List[int] = [40, 30, 25]
 
     @rx.event
     def set_section(self, str):
         self.selected_section = str
 
-    selected_course: Dict[str, int] = None
+    selected_course: List[Dict[str, int]] = None
 
     @rx.event
     def set_course(self, course_name: str):
-        """Set the selected course and redirect."""
+        """Set the selected course with decomposed list values into array format."""
         course = next(
             (course for course in self.courses if course["name"] == course_name),
             None
         )
 
         if course:
-            self.selected_course = course
+            # Decompose lists into separate objects within an array
+            decomposed_course = [
+                {
+                    "name": course["name"],
+                    "progress": course["progress"],
+                    "avg_progress": course["avg_progress"],
+                    "times_per_section": course["times_per_section"][i],
+                    "avg_times_per_section": course["avg_times_per_section"][i],
+                    "assignment_scores": course["assignment_scores"][i],
+                    "avg_assignment_scores": course["avg_assignment_scores"][i]
+                }
+                for i in range(len(course["times_per_section"]))
+            ]
+            self.selected_course = decomposed_course
             return rx.redirect(f"/course/{course_name}")
-        
-    def get_course(self) -> str:
-        return self._selected_course
+    
 
 def styled_course_component(course) -> rx.Component:
     """Styled course component with a course name, progress bar, and inactive buttons."""
@@ -158,44 +167,72 @@ def index() -> rx.Component:
 
 
 def course_details() -> rx.Component:
-    name = rx.heading(rx.State.name)
-
-
-    print(selected_course_data)
-
-    return rx.recharts.bar_chart(
+    return rx.container(
+        rx.heading("Course time spent"),
+        rx.recharts.bar_chart(
         rx.recharts.bar(
-            data_key="progress",
+            data_key="times_per_section",
+            stroke=rx.color("accent", 9),
+            fill=rx.color("accent", 8),
         ),
         rx.recharts.bar(
             data_key="avg_times_per_section",
+            stroke=rx.color("green", 9),
+            fill=rx.color("green", 8),
         ),
         rx.recharts.x_axis(),
         rx.recharts.y_axis(),
-        data=State.courses,
+        data=State.selected_course,
         width="50%",
         height= 600,
+        ),
+
+        rx.heading("Marks"),
+        rx.recharts.bar_chart(
+        rx.recharts.bar(
+            data_key="assignment_scores",
+            stroke=rx.color("accent", 9),
+            fill=rx.color("accent", 8),
+        ),
+        rx.recharts.bar(
+            data_key="avg_assignment_scores",
+            stroke=rx.color("green", 9),
+            fill=rx.color("green", 8),
+        ),
+        rx.recharts.x_axis(),
+        rx.recharts.y_axis(),
+        data=State.selected_course,
+        width="50%",
+        height= 600,
+        ),
+
+        rx.heading("Progress"),
+        rx.recharts.radial_bar_chart(
+        rx.recharts.radial_bar(
+            data_key="progress",
+            min_angle=90,
+            background=True,
+            label={
+                "fill": "#666",
+                "position": "insideStart",
+            },
+        ),
+        rx.recharts.radial_bar(
+            data_key="avg_progress",
+            min_angle=15,
+        ),
+        inner_radius="10%",
+        outer_radius="80%",
+        start_angle=180,
+        end_angle=0,
+        data=[State.selected_course[0]],
+        color=rx.color("accent", 9),   
+        width=600,
+        height=500,
+        radial_axis={"domain": [0, 100]},
+        legend={"verticalAlign": "middle", "align": "right"}
+        )
     )
-
-
-    # time_fig = px.bar(
-    #         x=list(range(1, len(State.selected_course["times_per_section"]) + 1)),
-    #         y=State.selected_course["times_per_section"],
-    #         title="Time per Course Section",
-    #         labels={"x": "Section", "y": "Time (minutes)"},
-    #     )
-    # time_fig.add_hline(y=course_time_avg, line_color="red", line_dash="dash", annotation_text="Avg Time")
-
-
-    # return rx.cond(
-    #     State.selected_course,
-    #     lambda: rx.vstack(
-    #         rx.plotly(time_fig, height="300px")
-    #     ),
-    #         rx.heading("Course not found", font_size="24px", padding="20px")
-    #     )
-
-    return name
 
 
 app = rx.App()
