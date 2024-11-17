@@ -1,0 +1,18 @@
+[
+    {
+      "course_id": "eds3wrfed",
+      "name": "Some course name",
+      "progress": 12
+    },
+    {
+      "course_id": "eds3wrfed",
+      "name": "Other course name",
+      "progress": 30
+    },
+    {
+      "course_id": "eds3wrfed",
+      "name": "Other other course name",
+      "progress": 60
+    }
+]
+

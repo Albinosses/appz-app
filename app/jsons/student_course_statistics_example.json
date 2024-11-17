@@ -1,0 +1,35 @@
+{
+  "name": "Introduction to Reflex",
+  "results": {
+    "times": {
+      "module1": {
+        "task1": 32,
+        "task2": 43
+      },
+      "module2": {
+        "task1": 56,
+        "task2": 43
+      },
+      "module3": {
+        "task1": 32,
+        "task2": 43
+      }
+    },
+    "scores":
+      {
+        "module1": {
+          "task1": 56,
+          "task2": 12
+        },
+        "module2": {
+          "task1": 32,
+          "task2": 11
+        },
+        "module3": {
+          "task1": 32,
+          "task2": 33
+        }
+      }
+
+  }
+}
