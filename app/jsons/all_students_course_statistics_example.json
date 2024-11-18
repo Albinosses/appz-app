@@ -16,22 +16,20 @@
           "task2": 19
         }
       },
-      "scores": [
-        {
-          "module1": {
-            "task1": 34,
-            "task2": 43
-          },
-          "module2": {
-            "task1": 65,
-            "task2": 23
-          },
-          "module3": {
-            "task1": 76,
-            "task2": 27
-          }
+      "scores": {
+        "module1": {
+          "task1": 34,
+          "task2": 43
+        },
+        "module2": {
+          "task1": 65,
+          "task2": 23
+        },
+        "module3": {
+          "task1": 76,
+          "task2": 27
         }
-      ]
+      }
     },
     {
       "times": {
@@ -48,22 +46,20 @@
           "task2": 43
         }
       },
-      "scores": [
-        {
-          "module1": {
-            "task1": 32,
-            "task2": 65
-          },
-          "module2": {
-            "task1": 32,
-            "task2": 41
-          },
-          "module3": {
-            "task1": 22,
-            "task2": 43
-          }
+      "scores": {
+        "module1": {
+          "task1": 32,
+          "task2": 65
+        },
+        "module2": {
+          "task1": 32,
+          "task2": 41
+        },
+        "module3": {
+          "task1": 22,
+          "task2": 43
         }
-      ]
+      }
     }
   ]
 }

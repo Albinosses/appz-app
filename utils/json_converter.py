@@ -1,20 +1,20 @@
-from abc import ABC, abstractmethod
+import json
+from typing import TextIO
 
-class DataAdapter(ABC):
-    @abstractmethod
-    def adapt(self, raw_data) -> dict:
-        pass
 
-class CourseDataAdapter(DataAdapter):
-    def adapt(self, raw_data) -> dict:
-        adapted_data = {"results": []}
-        for course in raw_data.get("results", []):
-            course_entry = {
-                "name": raw_data.get("name", "Unknown Course"),
-                "times": {}
-            }
-            times = course.get("times", {})
-            for module, tasks in times.items():
-                course_entry["times"][module] = tasks
-            adapted_data["results"].append(course_entry)
-        return adapted_data
+class DBCourseData:
+    def get_course_statistics(self, source) -> dict:
+        # in most cases we'll have some data base connector (Postgres or Snowflake), in this case we know how to transform data
+        return source
+
+
+class CourseDataStream:
+    # but in our case we have json data stream, and we don't know how to transform data
+    def get_course_data_stream(self, path) -> TextIO:
+        return open(path)
+
+class CourseDataAdapter(DBCourseData, CourseDataStream):
+    # we use CourseDataAdapter to smoothly integrate stream to CourseData
+
+    def get_course_statistics(self, path) -> dict:
+        return json.load(self.get_course_data_stream(path))
