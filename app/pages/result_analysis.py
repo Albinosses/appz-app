@@ -4,17 +4,18 @@ from typing import Dict, List
 
 from reflex_calendar import calendar
 
-from utils.json_converter import CourseDataAdapter
+from utils.connector_factory import DataConnectorFactory
 from .. import styles
 from ..templates import template
 
 import reflex as rx
 
-courseData = CourseDataAdapter()
+dataConnector = DataConnectorFactory.get_connector('json')
 
 
 class State(rx.State):
-    courses: List[Dict[str, int]] = courseData.get_course_statistics("app/jsons/user_courses_example.json")
+    courses: List[Dict[str, int]] = dataConnector.get_student_courses('as32rf3es')
+    print(courses)
 
     @rx.event
     def get_course(self, course):
@@ -48,37 +49,37 @@ def styled_course_component(course) -> rx.Component:
         padding="10px",
         box_shadow="0px 2px 8px rgba(0, 0, 0, 0.1)",
         margin="10px 0px 0px 0px",
+        width="100%",
     )
 
 
 @template(route="/result-analysis", title="Result Analysis")
 def result_analysis() -> rx.Component:
-    return rx.container(
+    return rx.hstack(
         rx.container(
             rx.hstack(
-                rx.container(
-                    calendar(locale="en-US", calendar_id="en-US"),
-                    width="40%",  # 50% width
+                rx.hstack(
+                    calendar(locale="en-US", calendar_id="en-US", border_radius="10px",
+                             ),
                 ),
 
-                rx.container(
-                    rx.vstack(
-                        rx.container(
-                            rx.list(
-                                rx.list.item("AI Fundamentals: You missed 3 tasks", margin='5px', padding="5px 10px",
-                                             background=styles.accent_bg_color, font_size="15px", border_radius='5px'),
-                                rx.list.item("AWS Crash Course: You missed 2 tasks", margin='5px', padding="5px 10px",
-                                             background=styles.accent_bg_color, font_size="15px", border_radius='5px'),
-                            ),
-                            width="100%",
-                            height="280px",
-                            border="1px solid #ddd",
-                            border_radius="10px",
-                            box_shadow="0 2px 8px rgba(0, 0, 0, 0.1)",
+                rx.vstack(
+                    rx.container(
+                        rx.list(
+                            rx.list.item("AI Fundamentals: You missed 3 tasks", margin='5px', padding="5px 10px",
+                                         background=styles.accent_bg_color, font_size="15px", border_radius='5px'),
+                            rx.list.item("AWS Crash Course: You missed 2 tasks", margin='5px', padding="5px 10px",
+                                         background=styles.accent_bg_color, font_size="15px", border_radius='5px'),
                         ),
+                        width="100%",
+                        height="280px",
+                        border="1px solid #ddd",
+                        border_radius="10px",
+                        box_shadow="0 2px 8px rgba(0, 0, 0, 0.1)",
                     ),
-                    width="50%",
+                    width="100%",
                 ),
+
             ),
             rx.foreach(State.courses, styled_course_component),
         ),

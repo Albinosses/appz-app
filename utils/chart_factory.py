@@ -53,6 +53,6 @@ class ComparisonChartFactory:
         if chart_type == "bar":
             return ComparisonBarChartBuilder()
         elif chart_type == "line":
-            return ComparisonChartBuilder()
+            return ComparisonLineChartBuilder()
         else:
             raise ValueError(f"Unsupported chart type: {chart_type}")
