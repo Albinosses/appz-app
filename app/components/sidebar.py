@@ -15,8 +15,8 @@ def sidebar_header() -> rx.Component:
 
         # The logo.
         rx.color_mode_cond(
-            rx.image(src="/reflex_black.svg", height="1.5em"),
-            rx.image(src="/reflex_white.svg", height="1.5em"),
+            rx.image(src="/analysis.png", height="4em"),
+            rx.image(src="/analysis.png", height="4em"),
         ),
         rx.spacer(),
         align="center",

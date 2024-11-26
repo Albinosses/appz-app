@@ -1,17 +1,17 @@
 [
     {
       "course_id": "34ffwefw",
-      "name": "Some course name",
+      "name": "Dagster Tutorial",
       "progress": 12
     },
     {
       "course_id": "eds3wrfed",
-      "name": "Other course name",
+      "name": "AI Fundamentals",
       "progress": 30
     },
     {
       "course_id": "rgeg4fd",
-      "name": "Other other course name",
+      "name": "Python3: Zero to Hero",
       "progress": 60
     }
 ]

@@ -50,9 +50,8 @@ class State(rx.State):
 @template(route="/course/[name]", title="Course Details")
 def course_statistics() -> rx.Component:
     return rx.vstack(
-        rx.button("<--", on_click=rx.redirect("/result-analysis")),
-        rx.select(State.modules, value=State.module, on_change=State.set_module),
-
+        rx.button("<--", width='100px' , on_click=rx.redirect("/result-analysis"), margin_bottom='25px'),
+        rx.select(State.modules, value=State.module, on_change=State.set_module, width='220px'),
         rx.heading("Course time spent"),
         bar_chart_builder.build_chart(State.course_time_data, "Student progress", "Average progress", 600),
         rx.heading("Course scores"),
