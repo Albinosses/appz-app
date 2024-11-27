@@ -4,6 +4,8 @@ from .. import styles
 
 import reflex as rx
 
+from ..styles import hover_accent_bg
+
 
 def sidebar_header() -> rx.Component:
     """Sidebar header.
@@ -19,6 +21,7 @@ def sidebar_header() -> rx.Component:
             rx.image(src="/analysis.png", height="4em"),
         ),
         rx.spacer(),
+        rx.color_mode.button(style={"opacity": "0.8", "scale": "0.95"}),
         align="center",
         width="100%",
         padding="0.35em",
@@ -33,8 +36,8 @@ def sidebar_footer() -> rx.Component:
         The sidebar footer component.
     """
     return rx.hstack(
-
-        rx.color_mode.button(style={"opacity": "0.8", "scale": "0.95"}),
+        rx.image('/user_icon.png', height="3em"),
+        rx.text('Erikh Petrushynets', weight="medium", font_size="0.9em", color=styles.text_color),
         justify="start",
         align="center",
         width="100%",
@@ -58,7 +61,7 @@ def sidebar_item(text: str, url: str) -> rx.Component:
     """
     # Whether the item is active.
     active = (rx.State.router.page.path == url.lower()) | (
-        (rx.State.router.page.path == "/") & text == "Overview"
+            (rx.State.router.page.path == "/") & text == "Overview"
     )
 
     return rx.link(

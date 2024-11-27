@@ -26,13 +26,13 @@ class State(rx.State):
 class NotificationState(rx.State):
     """State to manage notifications."""
     notifications: List[Dict[str, str]] = [
-        {"id": 1, "title": "AI Fundamentals:",
+        {"id": 1, "title": "AI Fundamentals",
          "description": "You missed 6 tasks. This is a longer detailed explanation about the missed tasks and their impact on your progress.",
          "timestamp": "28.10.24 at 12:53"},
-        {"id": 2, "title": "Kotlin Essentials:",
+        {"id": 2, "title": "Kotlin Essentials",
          "description": "We have something important to share. Here's more context about the notification and why it matters.",
          "timestamp": "26.10.24 at 11:40"},
-        {"id": 3, "title": "AI Fundamentals:",
+        {"id": 3, "title": "AI Fundamentals",
          "description": "You missed 4 tasks. These tasks are critical for the upcoming assessments.",
          "timestamp": "25.10.24 at 14:32"},
     ]
